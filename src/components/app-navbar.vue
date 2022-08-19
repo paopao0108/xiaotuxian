@@ -3,7 +3,6 @@
     <div class="container">
       <ul>
         <template v-if="profile.token">
-          <!-- 当有 token 时显示 -->
           <li>
             <a href="javascript:;">
               <i class="iconfont icon-user"></i>
@@ -22,7 +21,7 @@
         <li><a href="javascript:;">关于我们</a></li>
         <li>
           <a href="javascript:;">
-            <i class="iconfont icon-tel"></i>
+            <i class="iconfont icon-phone"></i>
             手机版
           </a>
         </li>
@@ -31,15 +30,12 @@
   </nav>
 </template>
 <script>
-import { computed } from 'vue';
 import { useStore } from 'vuex';
+import { computed } from 'vue';
 export default {
   name: 'AppTopnav',
   setup() {
-    // 获取用户的登录信息才能控制切换导航菜单
     const store = useStore();
-    // const { profile } = store.state.user; // 不是响应式数据,不能这样写
-    // 使用vuex中的state，利用computed将profile设置为响应式数据
     const profile = computed(() => {
       return store.state.user.profile;
     });
@@ -69,7 +65,6 @@ export default {
           color: @xtxColor;
         }
       }
-      // 后面的所有li
       ~ li {
         a {
           border-left: 2px solid #666;

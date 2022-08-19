@@ -4,7 +4,7 @@
     <!-- <nav><AppNavbar /></nav> -->
     <AppNavbar />
     <!-- 头部组件 -->
-    <header>头部组件</header>
+    <AppHeader />
     <!-- 内容容器 -->
     <main>
       <!-- 二级路由 -->
@@ -20,10 +20,12 @@
 
 <script>
 import AppNavbar from '@/components/app-navbar.vue';
+import AppHeader from '@/components/app-header.vue';
 export default {
   name: 'xtx-layout',
   components: {
-    AppNavbar
+    AppNavbar,
+    AppHeader
   },
   setup() {}
 };
