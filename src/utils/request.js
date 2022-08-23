@@ -2,8 +2,8 @@
 // 2. 请求拦截器，如果有token进行头部携带
 // 3. 响应拦截器：1. 剥离无效数据  2. 处理token失效
 // 4. 导出一个函数，调用当前的axsio实例发请求，返回值promise
-import axios from 'axios';
 import store from '@/store';
+import axios from 'axios';
 import router from '@/router';
 
 // 基准地址
@@ -17,11 +17,12 @@ const instance = axios.create({
 // 请求拦截器
 // 拦截业务逻辑,进行请求配置的修改（为什么要拦截？请求配置修改什么？为什么要修改）
 // 1. 获取用户信息对象
-const { profile } = store.state.user;
 instance.interceptors.request.use(
   // use的两个参数分别代表什么？
   config => {
     // 2. 判断是否有token
+    const { profile } = store.state.user;
+
     if (profile.token) {
       // 若本地有token，则在头部携带
       config.headers.Authorization = `Bearer ${profile.token}`;
