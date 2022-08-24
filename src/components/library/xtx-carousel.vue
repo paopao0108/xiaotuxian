@@ -1,5 +1,5 @@
 <template>
-  <div class="xtx-carousel">
+  <div class="xtx-carousel" @mouseenter="stop()" @mouseleave="start()">
     <ul class="carousel-body">
       <li class="carousel-item" v-for="(slider, i) in sliders" :key="slider.id" :class="{ fade: i === index }">
         <RouterLink to="/">
@@ -40,9 +40,9 @@ export default {
   setup(props) {
     const index = ref(0); // index用于存放当前轮播图图片的索引
 
-    // 自动轮播
+    // 1.自动轮播
     let timer = null;
-    const autoPlay = () => {
+    const autoPlayFn = () => {
       clearInterval(timer); // 创建定时器之前要先清除定时器
       timer = setInterval(() => {
         index.value++;
@@ -52,17 +52,30 @@ export default {
       }, props.duration);
     };
 
-    // 什么时候调用autoplay：若sliders数据有变化且autoplay为true
+    // 什么时候调用autoPlayFn：若sliders数据有变化且autoplay为true
     // 使用watch监听sliders
     watch(
       () => props.sliders,
       newVal => {
         if (newVal.length && props.autoPlay) {
-          autoPlay();
+          autoPlayFn();
         }
-      }
+      },
+      // 第三个参数immediate：true的作用是：立即执行watch，由于watch默认是数据变化才会监听
+      // 若没有immediate为true，那么当sliders数据没有变化，就无法执行watch监听
+      { immediate: true }
     );
-    return { index };
+
+    // 2.鼠标进入，轮播图停止，鼠标离开，轮播图播放
+    const stop = () => {
+      if (timer) clearInterval(timer);
+    };
+    const start = () => {
+      if (props.sliders.length && props.autoPlay) {
+        autoPlayFn();
+      }
+    };
+    return { index, stop, start };
   }
 };
 </script>
