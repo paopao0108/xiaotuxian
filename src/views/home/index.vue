@@ -1,5 +1,6 @@
 <template>
   <div class="home-container">
+    <!-- 左侧分类 -->
     <HomeCategory />
   </div>
 </template>

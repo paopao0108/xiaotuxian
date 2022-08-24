@@ -8,6 +8,8 @@ import router from '@/router';
 
 // 基准地址
 const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net/';
+// const baseURL = 'http://127.0.0.1:4523/m1/1498908-0-default/';
+
 // 创建一个新的axios实例
 const instance = axios.create({
   baseURL,
