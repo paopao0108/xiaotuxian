@@ -9,6 +9,10 @@
             {{ subItem.name }}
           </RouterLink>
         </template>
+        <span v-else>
+          <XtxSkeleton width="60px" height="18px" style="margin-right: 5px" bg="rgba(0,0,0, .2)" />
+          <XtxSkeleton width="60px" height="18px" bg="rgba(0,0,0, .2)" />
+        </span>
       </li>
     </ul>
     <!-- 右侧弹层 -->
@@ -58,6 +62,7 @@
 import { computed, reactive, ref } from 'vue';
 import { useStore } from 'vuex';
 import { findBrand } from '@/api/home.js';
+import XtxSkeleton from '@/components/library/xtx-skeleton.vue';
 export default {
   name: 'HomeCategory',
   setup() {
@@ -67,7 +72,6 @@ export default {
       children: [{ id: 'brand-chilren', name: '品牌推荐' }],
       brands: []
     });
-
     const store = useStore();
     const menuList = computed(() => {
       const list = store.state.category.list.map(item => {
@@ -82,21 +86,19 @@ export default {
       list.push(brand);
       return list;
     });
-    console.log('menuList', menuList);
-
+    // console.log('menuList', menuList);
     // 获取当前分类id
     const categoryId = ref(null);
     const currentCategory = computed(() => {
       return menuList.value.find(item => item.id === categoryId.value);
     });
-
     // 获取品牌数据
     findBrand().then(data => {
       brand.brands = data.result;
     });
-
     return { menuList, categoryId, currentCategory };
-  }
+  },
+  components: { XtxSkeleton }
 };
 </script>
 
@@ -216,6 +218,17 @@ export default {
   &:hover {
     .layer {
       display: block;
+    }
+  }
+  .xtx-skeleton {
+    animation: fade 1s linear infinite alternate;
+  }
+  @keyframes fade {
+    from {
+      opacity: 0.2;
+    }
+    to {
+      opacity: 1;
     }
   }
 }
