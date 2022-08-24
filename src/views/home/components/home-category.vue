@@ -1,8 +1,8 @@
 <template>
-  <div class="home-category">
+  <div class="home-category" @mouseleave="categoryId = null">
     <!-- 左侧分类 -->
     <ul class="menu">
-      <li v-for="topItem in menuList" :key="topItem.id" @mouseenter="categoryId = topItem.id">
+      <li v-for="topItem in menuList" :key="topItem.id" @mouseenter="categoryId = topItem.id" :class="{ active: categoryId === topItem.id }">
         <RouterLink :to="`/category/${topItem.id}`">{{ topItem.name }}</RouterLink>
         <template v-if="topItem.children">
           <RouterLink :to="`/category/sub/${subItem.id}`" v-for="subItem in topItem.children" :key="subItem.id">
@@ -14,10 +14,11 @@
     <!-- 右侧弹层 -->
     <div class="layer">
       <h4>
-        分类推荐
+        {{ currentCategory && currentCategory.id === 'brand' ? '品牌' : '分类' }}推荐
         <small>根据您的购买或浏览记录推荐</small>
       </h4>
-      <ul v-if="currentCategory && currentCategory.goods.length">
+      <!-- 商品 -->
+      <ul v-if="currentCategory && currentCategory.goods && currentCategory.goods.length">
         <li v-for="goods in currentCategory.goods" :key="goods.id">
           <RouterLink to="/">
             <img :src="goods.picture" alt="" />
@@ -32,6 +33,23 @@
           </RouterLink>
         </li>
       </ul>
+
+      <!-- 品牌 -->
+      <ul v-if="currentCategory && currentCategory.brands && currentCategory.brands.length">
+        <li class="brand" v-for="brand in currentCategory.brands" :key="brand.id">
+          <RouterLink to="/">
+            <img :src="brand.logo" alt="" />
+            <div class="info">
+              <p class="place">
+                <i class="iconfont icon-dingwei"></i>
+                {{ brand.place }}
+              </p>
+              <p class="name ellipsis">{{ brand.name }}</p>
+              <p class="desc ellipsis-2">{{ brand.desc }}</p>
+            </div>
+          </RouterLink>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -39,13 +57,15 @@
 <script>
 import { computed, reactive, ref } from 'vue';
 import { useStore } from 'vuex';
+import { findBrand } from '@/api/home.js';
 export default {
   name: 'HomeCategory',
   setup() {
     const brand = reactive({
       id: 'brand',
       name: '品牌',
-      children: [{ id: 'brand-chilren', name: '品牌推荐' }]
+      children: [{ id: 'brand-chilren', name: '品牌推荐' }],
+      brands: []
     });
 
     const store = useStore();
@@ -70,6 +90,11 @@ export default {
       return menuList.value.find(item => item.id === categoryId.value);
     });
 
+    // 获取品牌数据
+    findBrand().then(data => {
+      brand.brands = data.result;
+    });
+
     return { menuList, categoryId, currentCategory };
   }
 };
@@ -87,7 +112,9 @@ export default {
       padding-left: 40px;
       height: 50px;
       line-height: 50px;
-      &:hover {
+      // 当鼠标经过 或 有active这个类，那么就显示背景色
+      &:hover,
+      &.active {
         background: @xtxColor;
       }
       a {
@@ -161,6 +188,25 @@ export default {
               i {
                 font-size: 16px;
               }
+            }
+          }
+        }
+      }
+      // 品牌样式
+      .brand {
+        height: 180px;
+        a {
+          align-items: flex-start;
+          img {
+            width: 120px;
+            height: 160px;
+          }
+          .info {
+            p {
+              margin-top: 8px;
+            }
+            .place {
+              color: #999;
             }
           }
         }
