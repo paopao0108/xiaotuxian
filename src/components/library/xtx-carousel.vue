@@ -8,12 +8,12 @@
       </li>
     </ul>
     <!-- 上一张 -->
-    <a href="javascript:;" class="carousel-btn prev"><i class="iconfont icon-angle-left"></i></a>
+    <a href="javascript:;" class="carousel-btn prev"><i class="iconfont icon-angle-left" @click="toggle(-1)"></i></a>
     <!-- 下一张 -->
-    <a href="javascript:;" class="carousel-btn next"><i class="iconfont icon-angle-right"></i></a>
+    <a href="javascript:;" class="carousel-btn next"><i class="iconfont icon-angle-right" @click="toggle(1)"></i></a>
     <div class="carousel-indicator">
       <!-- 添加active类，激活点 -->
-      <span v-for="(item, i) in sliders" :key="item.id" :class="{ active: i === index }"></span>
+      <span @click="index = i" v-for="(item, i) in sliders" :key="item.id" :class="{ active: i === index }"></span>
     </div>
   </div>
 </template>
@@ -75,7 +75,25 @@ export default {
         autoPlayFn();
       }
     };
-    return { index, stop, start };
+
+    // 3.点击上页下页切换轮播
+    const toggle = step => {
+      const newVal = index.value + step;
+      const length = props.sliders.length;
+      index.value = (newVal + length) % length;
+      // 老师方法：
+      // const newIndex = index.value + step;
+      // if (newIndex >= props.sliders.length) {
+      //   index.value = 0;
+      //   return;
+      // }
+      // if (newIndex < 0) {
+      //   index.value = props.sliders.length - 1;
+      //   return;
+      // }
+      // index.value = newIndex;
+    };
+    return { index, stop, start, toggle };
   }
 };
 </script>
