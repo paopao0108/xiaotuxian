@@ -1,12 +1,12 @@
 <template>
   <HomePanel title="人气推荐" sub-title="人气爆款 不容错过">
     <!-- 这个div标签是否可以去掉 -->
-    <div style="position: relative; height: 426px">
+    <div ref="target" style="position: relative; height: 426px">
       <!-- 面板内容 -->
       <!-- 添加Transition 淡出动画 -->
       <Transition name="fade">
         <!-- 1.当数据加载完毕（有数据时），显示 -->
-        <ul ref="pannel" class="goods-list" v-if="goods.length">
+        <ul class="goods-list" v-if="goods.length">
           <li v-for="item in goods" :key="item.id">
             <RouterLink to="/">
               <img :src="item.picture" alt="" />
@@ -23,11 +23,11 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+// import { ref } from 'vue';
 import HomePanel from './home-panel';
 import { findHot } from '@/api/home';
 import HomeSkeleton from './home-skeleton.vue';
-// import { useLazyData } from '@/hooks';
+import { useLazyData } from '@/hooks';
 export default {
   name: 'HomeHot',
   components: {
@@ -36,17 +36,21 @@ export default {
   },
   setup() {
     // 直接加载数据
-    const goods = ref([]);
-    findHot().then(data => {
-      goods.value = data.result;
-    });
-    console.log('人气推荐goods', goods);
-    return { goods };
+    // const goods = ref([]);
+    // findHot().then(data => {
+    //   goods.value = data.result;
+    // });
+    // console.log('人气推荐goods', goods);
+    // return { goods };
 
     // 使用懒加载数据：target没有封装在懒加载方法中
     // const target = ref(null);
     // const result = useLazyData(target, findHot);
     // return { goods: result, target };
+
+    // 使用懒加载数据：target封装在懒加载方法中
+    const { result, target } = useLazyData(findHot);
+    return { goods: result, target };
   }
 };
 </script>

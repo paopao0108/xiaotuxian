@@ -9,7 +9,8 @@ import { ref } from 'vue';
  * @param {Function} apiFn - API函数
  * @return {*}
  */
-export const useLazyData = (target, apiFn) => {
+export const useLazyData = apiFn => {
+  const target = ref(null); // 需要懒加载的DOM对象
   const result = ref([]);
   // stop 停止观察
   const { stop } = useIntersectionObserver(target, ([{ isIntersecting }], observerElement) => {
@@ -24,5 +25,5 @@ export const useLazyData = (target, apiFn) => {
     }
   });
   // 返回懒加载得到的数据
-  return result;
+  return { result, target };
 };
