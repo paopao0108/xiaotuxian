@@ -17,3 +17,19 @@ export const findBrand = (limit = 6) => {
 export const findBanner = () => {
   return request('/home/banner', 'get');
 };
+
+/**
+ * @description: 获取首页主体-新鲜好物的数据
+ * @return Promise
+ */
+export const findNew = (limit = 4) => {
+  return request('/home/new', 'get', { limit });
+};
+
+/**
+ * @description: 获取首页主体-人气推荐的数据
+ * @return Promise
+ */
+export const findHot = () => {
+  return request('/home/hot', 'get');
+};

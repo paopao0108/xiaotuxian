@@ -4,7 +4,8 @@
 // vue3插件写法要素：导入出一个对象，有install函数，默认传入 app 应用实例，app 基础之上扩展
 
 import XtxSkeleton from './xtx-skeleton.vue';
-import Xtxcarousel from './xtx-carousel.vue';
+import XtxCarousel from './xtx-carousel.vue';
+import XtxMore from './xtx-more.vue';
 
 export default {
   install(app) {
@@ -12,6 +13,7 @@ export default {
     // 若要挂载原型 通过 app.config.globalProperties 方式
     // 使用的组件一定要有name属性
     app.component(XtxSkeleton.name, XtxSkeleton);
-    app.component(Xtxcarousel.name, Xtxcarousel);
+    app.component(XtxCarousel.name, XtxCarousel);
+    app.component(XtxMore.name, XtxMore);
   }
 };

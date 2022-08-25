@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue';
+import { onUnmounted, ref, watch } from 'vue';
 export default {
   name: 'XtxCarousel',
   props: {
@@ -93,6 +93,11 @@ export default {
       // }
       // index.value = newIndex;
     };
+
+    // 4. 组件卸载，清除定时器
+    onUnmounted(() => {
+      clearInterval(timer);
+    });
     return { index, stop, start, toggle };
   }
 };
