@@ -13,17 +13,24 @@ export const useLazyData = apiFn => {
   const target = ref(null); // 需要懒加载的DOM对象
   const result = ref([]);
   // stop 停止观察
-  const { stop } = useIntersectionObserver(target, ([{ isIntersecting }], observerElement) => {
-    // isIntersecting 是否进入可视区
-    if (isIntersecting) {
-      // 1.进入可视区，停止监听
-      stop();
-      // 2.调用API函数获取数据
-      apiFn().then(data => {
-        result.value = data.result;
-      });
+  const { stop } = useIntersectionObserver(
+    target,
+    ([{ isIntersecting }], observerElement) => {
+      // isIntersecting 是否进入可视区
+      if (isIntersecting) {
+        // 1.进入可视区，停止监听
+        stop();
+        // 2.调用API函数获取数据
+        apiFn().then(data => {
+          result.value = data.result;
+        });
+      }
+    },
+    // 配置选项，相交比例大于0触发：元素一出现在可视区就加载
+    {
+      threshold: 0
     }
-  });
+  );
   // 返回懒加载得到的数据
   return { result, target };
 };

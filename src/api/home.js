@@ -33,3 +33,15 @@ export const findNew = (limit = 4) => {
 export const findHot = () => {
   return request('/home/hot', 'get');
 };
+
+/**
+ * @description: 获取商品数据
+ * @return Promise
+ */
+export const findProduct = () => {
+  return request('/home/goods', 'get');
+};
+
+export const findSpecial = () => {
+  return request('/home/special', 'get');
+};
