@@ -15,5 +15,38 @@ export default {
     app.component(XtxSkeleton.name, XtxSkeleton);
     app.component(XtxCarousel.name, XtxCarousel);
     app.component(XtxMore.name, XtxMore);
+    // 定义指令
+    defineDirective(app);
   }
+};
+
+// 定义指令
+const defineDirective = app => {
+  // 图片懒加载指令 v-lazy
+  // 原理：先存储图片地址，不能在src上。当图片进入可视区，将存储的图片地址设置给图片元素
+  app.directive('lazy', {
+    // vue2 监听使用指令的DOM是否创建好，钩子函数：inserted
+    // vue3 使用指令的DOM元素是否创建好，钩子函数：mounted（vue3的指令拥有的钩子函数和组件的一样）
+    mounted(el, binding) {
+      // el就是使用指令的元素，binding就是使用指令时传入的值（要使用其值，要用binding.value）
+      console.log('mounted');
+      // 创建一个观察对象，来观察当前使用指令的元素
+      const observe = new IntersectionObserver(
+        ([{ isIntersecting }]) => {
+          if (isIntersecting) {
+            console.log('进入可视区', el);
+            // 停止观察
+            observe.unobserve(el);
+            // 把指令的值设置给el的src属性，binding.value就是传入的值
+            el.src = binding.value;
+          }
+        },
+        {
+          threshold: 0
+        }
+      );
+      // 开启观察
+      observe.observe(el);
+    }
+  });
 };
