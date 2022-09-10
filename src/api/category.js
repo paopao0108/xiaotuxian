@@ -4,8 +4,18 @@
 import request from '@/utils/request';
 
 /**
- * 2. 获取首页头部需要的分类数据
+ * @description: 获取首页头部需要的分类数据
+ * @return {*}
  */
 export const findAllCategory = () => {
   return request('/home/category/head', 'get');
+};
+
+/**
+ * @description: 获取顶级类目信息（children属性就是各个子分类）
+ * @param {String} id - 顶级类目ID
+ * @return {*}
+ */
+export const findTopCategory = id => {
+  return request('/category', 'get', { id });
 };

@@ -24,19 +24,40 @@
         </ul>
       </div>
       <!-- 不同分类商品 -->
+      <!-- <div class="ref-goods">
+        <div class="head">
+          <h3>- 海鲜 -</h3>
+          <p class="tag">温暖柔软，品质之选</p>
+          <XtxMore />
+        </div>
+        <div class="body">
+          <GoodsItem v-for="i in 5" :key="i" />
+        </div>
+      </div> -->
+      <div class="ref-goods" v-for="sub in subList" :key="sub.id">
+        <div class="head">
+          <h3>- {{ sub.name }} -</h3>
+          <p class="tag">温暖柔软，品质之选</p>
+          <XtxMore :path="`/category/sub/${id}`" />
+        </div>
+        <div class="body">
+          <GoodsItem v-for="goods in sub.goods" :key="goods.id" :goods="goods" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { findBanner } from '@/api/home';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
-// import GoodsItem from './components/goods-item.vue';
+import GoodsItem from './components/goods-item.vue';
+import { findTopCategory } from '@/api/category';
 export default {
   name: 'TopCategory',
   components: {
-    // GoodsItem
+    GoodsItem
   },
   setup() {
     // 轮播图
@@ -55,12 +76,55 @@ export default {
       if (item) cate = item;
       return cate;
     });
-    return { sliders, topCategory };
+
+    // 获取各个子类目下的推荐商品
+    const subList = ref([]);
+    const getSubList = () => {
+      findTopCategory(route.params.id).then(data => {
+        subList.value = data.result.children;
+      });
+    };
+    // 需要监听地址栏上的id变化，初始化数据，否则当切换不同顶级分类时，页面数据不会改变
+    watch(
+      () => route.params.id,
+      newVal => {
+        // 若监听的路由动态参数id有值时，调用获取数据的函数
+        newVal && getSubList();
+      },
+      // 让watch在首次初始化的时候触发一次
+      { immediate: true }
+    );
+    return { sliders, topCategory, subList };
   }
 };
 </script>
 <style scoped lang="less">
 .top-category {
+  .ref-goods {
+    background-color: #fff;
+    margin-top: 20px;
+    position: relative;
+    .head {
+      .xtx-more {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+      }
+      .tag {
+        text-align: center;
+        color: #999;
+        font-size: 20px;
+        position: relative;
+        top: -20px;
+      }
+    }
+    .body {
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      padding: 0 65px 30px;
+    }
+  }
   h3 {
     font-size: 28px;
     color: #666;
