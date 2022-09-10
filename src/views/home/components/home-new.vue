@@ -34,7 +34,7 @@ export default {
     findNew().then(data => {
       goods.value = data.result;
     });
-    console.log('新鲜好物goods', goods);
+    // console.log('新鲜好物goods', goods);
     return { goods };
   }
 };

@@ -41,7 +41,7 @@ export default {
   components: { HomePanel },
   setup() {
     const { result, target } = useLazyData(findSpecial);
-    console.log('最新专题result', result);
+    // console.log('最新专题result', result);
     return { special: result, target };
   }
 };

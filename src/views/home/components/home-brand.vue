@@ -45,7 +45,7 @@ export default {
       index.value = newIndex;
     };
 
-    console.log('品牌数据result', result);
+    // console.log('品牌数据result', result);
     return { brands: result, target, index, toggle };
   }
 };
