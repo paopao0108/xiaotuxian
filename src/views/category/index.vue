@@ -6,7 +6,9 @@
       <!-- 如何去除最后一个类目的箭头：法1-通过样式控制； 法2-通过render创建箭头 -->
       <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
-        <XtxBreadItem>{{ topCategory.name }}</XtxBreadItem>
+        <Transition name="fade-right">
+          <XtxBreadItem :key="topCategory.id">{{ topCategory.name }}</XtxBreadItem>
+        </Transition>
       </XtxBread>
       <!-- 轮播图 -->
       <XtxCarousel :sliders="sliders" style="height: 500px" />
@@ -24,21 +26,11 @@
         </ul>
       </div>
       <!-- 不同分类商品 -->
-      <!-- <div class="ref-goods">
-        <div class="head">
-          <h3>- 海鲜 -</h3>
-          <p class="tag">温暖柔软，品质之选</p>
-          <XtxMore />
-        </div>
-        <div class="body">
-          <GoodsItem v-for="i in 5" :key="i" />
-        </div>
-      </div> -->
       <div class="ref-goods" v-for="sub in subList" :key="sub.id">
         <div class="head">
           <h3>- {{ sub.name }} -</h3>
           <p class="tag">温暖柔软，品质之选</p>
-          <XtxMore :path="`/category/sub/${id}`" />
+          <XtxMore :path="`/category/sub/${sub.id}`" />
         </div>
         <div class="body">
           <GoodsItem v-for="goods in sub.goods" :key="goods.id" :goods="goods" />
@@ -88,8 +80,9 @@ export default {
     watch(
       () => route.params.id,
       newVal => {
-        // 若监听的路由动态参数id有值时，调用获取数据的函数
-        newVal && getSubList();
+        // 若监听的路由动态参数id有值 且 点击的是顶级分类，调用获取数据的函数
+        // 因二级目录也会有 route.params.id，但点击时不发请求，故加上路由判断更加严谨
+        if (newVal && `/category/${newVal}` === route.path) getSubList();
       },
       // 让watch在首次初始化的时候触发一次
       { immediate: true }

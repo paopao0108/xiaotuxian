@@ -19,3 +19,12 @@ export const findAllCategory = () => {
 export const findTopCategory = id => {
   return request('/category', 'get', { id });
 };
+
+/**
+ * @description: 获取二级类目的筛选条件
+ * @param {String} id - 二级类目ID
+ * @return {*}
+ */
+export const findSubCategoryFilter = id => {
+  return request('/category/sub/filter', 'get', { id });
+};
